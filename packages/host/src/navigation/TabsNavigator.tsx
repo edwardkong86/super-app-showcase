@@ -1,6 +1,6 @@
 import React from 'react';
 import {createNativeBottomTabNavigator} from '@bottom-tabs/react-navigation';
-import {MD3Colors} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeNavigator from './HomeNavigator';
 import ServicesNavigator from './ServicesNavigator';
@@ -19,11 +19,12 @@ const accountIcon = Icon.getImageSourceSync('account', 24);
 const Tabs = createNativeBottomTabNavigator<TabsParamList>();
 
 const TabsNavigator = () => {
+  const { colors } = useTheme();
   return (
     <Tabs.Navigator
       translucent={false}
-      tabBarActiveTintColor={MD3Colors.primary50}
-      barTintColor={MD3Colors.primary95}>
+      tabBarActiveTintColor={colors.primary50}
+      barTintColor={colors.primary95}>
       <Tabs.Screen
         name="HomeNavigator"
         component={HomeNavigator}

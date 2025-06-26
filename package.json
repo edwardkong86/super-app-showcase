@@ -27,10 +27,6 @@
     "mprocs": "^0.7.1"
   },
   "pnpm": {
-    "patchedDependencies": {
-      "@react-native/community-cli-plugin": "patches/@react-native__community-cli-plugin.patch",
-      "react-native-paper": "patches/react-native-paper.patch"
-    },
     "packageExtensions": {
       "@module-federation/data-prefetch": {
         "peerDependenciesMeta": {

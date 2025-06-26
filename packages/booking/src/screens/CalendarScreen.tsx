@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {CalendarList, CalendarUtils, DateData} from 'react-native-calendars';
-import {FAB, List, MD3Colors} from 'react-native-paper';
+import {FAB, List, useTheme} from 'react-native-paper';
 import recentBookings from '../data/recentBookings.json';
 
 const INITIAL_DATE = CalendarUtils.getCalendarDateString(new Date());
@@ -15,6 +15,7 @@ const renderAppointment = ({item}: any) => (
 );
 
 const CalendarScreen = () => {
+  const { colors } = useTheme();
   const [selected, setSelected] = useState(INITIAL_DATE);
 
   const marked = useMemo(() => {
@@ -25,7 +26,7 @@ const CalendarScreen = () => {
       },
       [INITIAL_DATE]: {
         selected: true,
-        selectedColor: MD3Colors.primary50,
+        selectedColor: colors.primary50,
       },
     };
   }, [selected]);
@@ -49,13 +50,13 @@ const CalendarScreen = () => {
           dayTextColor: 'black',
           monthTextColor: 'black',
           indicatorColor: 'black',
-          selectedDayBackgroundColor: MD3Colors.secondary50,
+          selectedDayBackgroundColor: colors.secondary50,
         }}
       />
       <FlatList data={recentBookings.data} renderItem={renderAppointment} />
       <FAB
         icon="plus"
-        color={MD3Colors.primary50}
+        color={colors.primary50}
         style={styles.fab}
         onPress={() => {}}
       />

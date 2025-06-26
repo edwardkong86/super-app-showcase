@@ -24,6 +24,7 @@ import upcomingBookings from '../data/upcomingBookings.json';
 import newProducts from '../data/newProducts.json';
 import recentNews from '../data/recentNews.json';
 import recentArticles from '../data/recentArticles.json';
+// import { ThemeProvider, Button } from "mbb-ui-kit";
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParamList>,

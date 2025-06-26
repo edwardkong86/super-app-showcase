@@ -1,11 +1,11 @@
 import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import {MD3Colors, Text} from 'react-native-paper';
+import {useTheme, Text} from 'react-native-paper';
 import {useAuth} from '../contexts/AuthContext';
 
 const SignInScreen = () => {
   const {signIn} = useAuth();
-
+  const { colors } = useTheme();
   return (
     <View style={styles.container}>
       <Text variant="headlineMedium" style={styles.welcomeHeadline}>
@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcomeHeadline: {
-    color: MD3Colors.primary20,
+    color: colors.primary20,
   },
   welcomeText: {
     padding: 16,
     paddingBottom: 32,
   },
   button: {
-    backgroundColor: MD3Colors.primary90,
+    backgroundColor: colors.primary90,
     padding: 16,
     borderRadius: 16,
   },
