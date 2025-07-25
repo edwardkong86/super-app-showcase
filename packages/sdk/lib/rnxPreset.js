@@ -14,10 +14,10 @@
  *   "kitType": "app",
  *   "alignDeps": {
  *     "presets": [
- *       "./node_modules/super-app-showcase-sdk/preset"
+ *       "./node_modules/nextgen-sdk/preset"
  *     ],
  *     "requirements": [
- *       "super-app-showcase-sdk@0.0.1"
+ *       "nextgen-sdk@0.0.1"
  *     ],
  *     "capabilities": [
  *       "super-app"
@@ -35,8 +35,8 @@ const addSdkCapabilities = (dependencies, devDependencies) => {
   const profile = {
     ...dependencies,
     ...devDependencies,
-    "super-app-showcase-sdk": {
-      name: "super-app-showcase-sdk",
+    "nextgen-sdk": {
+      name: "nextgen-sdk",
       version: sdkPackageJson.version,
       devOnly: true,
     },

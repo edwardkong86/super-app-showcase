@@ -1,5 +1,5 @@
 pluginManagement {
-    apply from: "../node_modules/super-app-showcase-sdk/android/resolveNodePackage.gradle"
+    apply from: "../node_modules/nextgen-sdk/android/resolveNodePackage.gradle"
     // resolve react-native-gradle-plugin & CLI dynamically
     def reactNativePath = resolveNodePackage('react-native', rootDir)
     def gradlePluginPath = resolveNodePackage('@react-native/gradle-plugin', reactNativePath)
