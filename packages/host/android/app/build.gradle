@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.callstack.superappshowcase.host"
+    namespace "com.maybank.retail.host"
     defaultConfig {
-        applicationId "com.callstack.superappshowcase.host"
+        applicationId "com.maybank.retail.host"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 2
