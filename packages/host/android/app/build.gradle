@@ -4,7 +4,7 @@ apply plugin: "com.facebook.react"
 
 // [nextgen change]
 // pnpm compliant way to resolve node modules path
-apply from: "../../node_modules/nextgen-sdk/android/resolveNodePackage.gradle"
+apply from: "../../node_modules/nextgen-shared-sdk/android/resolveNodePackage.gradle"
     
 def reactNativePath = resolveNodePackage('react-native', rootDir)
 def codegenPath = resolveNodePackage('@react-native/codegen', reactNativePath)

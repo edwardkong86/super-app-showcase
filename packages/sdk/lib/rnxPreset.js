@@ -14,10 +14,10 @@
  *   "kitType": "app",
  *   "alignDeps": {
  *     "presets": [
- *       "./node_modules/nextgen-sdk/preset"
+ *       "./node_modules/nextgen-shared-sdk/preset"
  *     ],
  *     "requirements": [
- *       "nextgen-sdk@0.0.1"
+ *       "nextgen-shared-sdk@0.0.1"
  *     ],
  *     "capabilities": [
  *       "super-app"
@@ -35,8 +35,8 @@ const addSdkCapabilities = (dependencies, devDependencies) => {
   const profile = {
     ...dependencies,
     ...devDependencies,
-    "nextgen-sdk": {
-      name: "nextgen-sdk",
+    "nextgen-shared-sdk": {
+      name: "nextgen-shared-sdk",
       version: sdkPackageJson.version,
       devOnly: true,
     },
