@@ -1,7 +1,7 @@
 {
   "react": {
     "name": "react",
-    "version": "19.0.0"
+    "version": "19.1.0"
   },
   "react-native": {
     "name": "react-native",
@@ -17,7 +17,7 @@
   },
   "@react-navigation/native": {
     "name": "@react-navigation/native",
-    "version": "7.0.14"
+    "version": "7.1.14"
   },
   "@react-navigation/native-stack": {
     "name": "@react-navigation/native-stack",

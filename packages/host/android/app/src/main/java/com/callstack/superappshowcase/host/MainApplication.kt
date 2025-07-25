@@ -1,4 +1,4 @@
-package com.callstack.superappshowcase.host
+package com.maybank.retail.host
  
 import android.app.Application
 import com.facebook.react.PackageList

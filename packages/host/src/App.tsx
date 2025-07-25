@@ -2,6 +2,7 @@ import React from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider, DefaultTheme, DarkTheme, MD3Colors } from 'react-native-paper';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import MainNavigator from './navigation/MainNavigator';
 import SplashScreen from './components/SplashScreen';
@@ -61,34 +62,36 @@ const customTheme = {
 
 const App = () => {
   return (
-    <PaperProvider theme={customTheme}>
-      <ErrorBoundary name="AuthProvider">
-        <React.Suspense fallback={<SplashScreen />}>
-          <AuthProvider>
-            {(authData: { isSignout: boolean; isLoading: boolean }) => {
-              if (authData.isLoading) {
-                return <SplashScreen />;
-              }
+    <GestureHandlerRootView>
+      <PaperProvider theme={customTheme}>
+        <ErrorBoundary name="AuthProvider">
+          <React.Suspense fallback={<SplashScreen />}>
+            <AuthProvider>
+              {(authData: { isSignout: boolean; isLoading: boolean }) => {
+                if (authData.isLoading) {
+                  return <SplashScreen />;
+                }
 
-              if (authData.isSignout) {
+                if (authData.isSignout) {
+                  return (
+                    <React.Suspense fallback={<SplashScreen />}>
+                      <SignInScreen />
+                    </React.Suspense>
+                  );
+                }
+
                 return (
-                  <React.Suspense fallback={<SplashScreen />}>
-                    <SignInScreen />
-                  </React.Suspense>
+                  <NavigationContainer
+                    onReady={() => RNBootSplash.hide({ fade: true })}>
+                    <MainNavigator />
+                  </NavigationContainer>
                 );
-              }
-
-              return (
-                <NavigationContainer
-                  onReady={() => RNBootSplash.hide({ fade: true })}>
-                  <MainNavigator />
-                </NavigationContainer>
-              );
-            }}
-          </AuthProvider>
-        </React.Suspense>
-      </ErrorBoundary>
-    </PaperProvider>
+              }}
+            </AuthProvider>
+          </React.Suspense>
+        </ErrorBoundary>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 };
 

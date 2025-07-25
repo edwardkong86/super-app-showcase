@@ -1,4 +1,4 @@
-package com.callstack.superappshowcase.host
+package com.maybank.retail.host
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
