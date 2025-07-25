@@ -1,6 +1,6 @@
-# Super-App-Showcase Release Process
+# NeXTGen Release Process
 
-This document explains the detailed process of releasing the Super-App-Showcase. The release process is divided into two major sections:
+This document explains the detailed process of releasing the NeXTGen. The release process is divided into two major sections:
 
 1. Deploying Mini App bundles
 2. Deploying Host App to the store

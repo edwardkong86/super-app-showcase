@@ -3,8 +3,8 @@
   "version": "0.0.2",
   "description": "Dependency management & utils for the NeXTGen",
   "license": "MIT",
-  "homepage": "https://github.com/callstack/super-app-showcase",
-  "repository": "github:callstack/super-app-showcase",
+  "homepage": "https://github.com/maybanker/nextgen",
+  "repository": "github:maybanker/nextgen",
   "main": "index.js",
   "files": [
     "android",

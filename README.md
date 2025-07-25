@@ -1,6 +1,5 @@
-<a href="https://www.callstack.com/open-source?utm_campaign=generic&utm_source=github&utm_medium=referral&utm_content=super-app-showcase" align="center">
-  <img src="https://github.com/user-attachments/assets/4ee05e68-54ca-42b3-994c-9de988d66333" alt="Super App Showcase" />
-</a>
+
+<img src="https://github.com/user-attachments/assets/4ee05e68-54ca-42b3-994c-9de988d66333" alt="NeXTGen" />
 <h3 align="center">Super Apps in React Native with Re.Pack</h3>
 <div align="center">
 
@@ -144,10 +143,7 @@ Read the [contribution guidelines](/CONTRIBUTING.md) before contributing.
 Super App showcase is an open source project and will always remain free to use. If you think it's cool, please star it 🌟. [Callstack][callstack-readme-with-love] is a group of React and React Native geeks, contact us at [hello@callstack.com](mailto:hello@callstack.com) if you need any help with these or just want to say hi!
 
 <!-- badges -->
-
-[callstack-readme-with-love]: https://callstack.com/?utm_source=github.com&utm_medium=referral&utm_campaign=super-app-showcase&utm_term=readme-with-love
-[license-badge]: https://img.shields.io/github/license/callstack/super-app-showcase?style=for-the-badge
-[license]: https://github.com/callstack/super-app-showcase/blob/main/LICENSE
+[license]: https://github.com/maybanker/nextgen/blob/main/LICENSE
 [prs-welcome-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge
 [prs-welcome]: ./CONTRIBUTING.md
 [chat-badge]: https://img.shields.io/discord/426714625279524876.svg?style=for-the-badge

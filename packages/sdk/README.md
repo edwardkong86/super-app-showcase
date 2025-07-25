@@ -1,6 +1,6 @@
-# Super App Showcase SDK
+# NeXTGen SDK
 
-SDK for the [Super App Showcase](https://github.com/callstack/super-app-showcase).
+SDK for the [NeXTGen](https://github.com/maybanker/nextgen).
 
 Its purpose is three-fold:
 
