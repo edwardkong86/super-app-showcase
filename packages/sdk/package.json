@@ -1,6 +1,6 @@
 {
   "name": "nextgen-shared-sdk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Dependency management & utils for the NeXTGen",
   "license": "MIT",
   "homepage": "https://github.com/@NeXTGen/shared-sdk",

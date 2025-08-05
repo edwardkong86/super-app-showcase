@@ -25,7 +25,7 @@ import upcomingBookings from '../data/upcomingBookings.json';
 import newProducts from '../data/newProducts.json';
 import recentNews from '../data/recentNews.json';
 import recentArticles from '../data/recentArticles.json';
-import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "mbb-ui-kit";
+// import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "mbb-ui-kit/src";
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<HomeStackParamList>,
@@ -377,7 +377,7 @@ const HomeScreen = ({ navigation }: Props) => {
         flex: 1,
         backgroundColor: '#fff',
       }}>
-        <Typo type="p2" weight="500" align="center">
+        {/* <Typo type="p2" weight="500" align="center">
           Centered semibold text
         </Typo>
         <MbbButton label="Press Me" onPress={() => Alert.alert("Pressed!")} />
@@ -394,11 +394,11 @@ const HomeScreen = ({ navigation }: Props) => {
             ],
           }}
           quickActions={quickActions}
-        />
+        /> */}
       </View>
-      <ThemeProvider theme={{ primary: "#6200ee", text: "#fff" }}>
+      {/* <ThemeProvider theme={{ primary: "#6200ee", text: "#fff" }}>
 
-      </ThemeProvider>
+      </ThemeProvider> */}
       <View style={styles.header}>
         <Text variant="titleLarge" style={styles.headerTitle}>
           Upcoming Appointments
