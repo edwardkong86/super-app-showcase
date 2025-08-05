@@ -17,7 +17,7 @@
  *       "./node_modules/nextgen-shared-sdk/preset"
  *     ],
  *     "requirements": [
- *       "nextgen-shared-sdk@0.0.5"
+ *       "nextgen-shared-sdk@0.0.1"
  *     ],
  *     "capabilities": [
  *       "super-app"
