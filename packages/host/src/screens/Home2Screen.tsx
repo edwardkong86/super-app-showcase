@@ -1,84 +1,17 @@
-import React from 'react';
-import {
-  FlatList,
-  ListRenderItem,
-  ScrollView,
-  StyleSheet,
-  View,
-  Alert
-} from 'react-native';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { NativeBottomTabScreenProps } from '@bottom-tabs/react-navigation';
-import {
-  Avatar,
-  Card,
-  Button,
-  Divider,
-  Text,
-  Title,
-  Paragraph,
-} from 'react-native-paper';
-import { TabsParamList } from '../navigation/TabsNavigator';
-import { HomeStackParamList } from '../navigation/HomeNavigator';
-import upcomingBookings from '../data/upcomingBookings.json';
-import newProducts from '../data/newProducts.json';
-import recentNews from '../data/recentNews.json';
-import recentArticles from '../data/recentArticles.json';
+import React, { useState } from 'react';
+import { Alert, ScrollView, Text, View, StyleSheet, Platform, Dimensions } from 'react-native';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
+import { CacheeImage } from "cachee";
 import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "mbb-ui-kit";
 
-type Props = CompositeScreenProps<
-  NativeStackScreenProps<HomeStackParamList>,
-  NativeBottomTabScreenProps<TabsParamList, 'HomeNavigator'>
->;
+import assets from "../assets";
+const { width, height } = Dimensions.get('window');
+export const ParallaxExample = () => {
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const [isChildReachToBottom, setIsChildReachToBottom] = useState(false);
+  const [isChildScrollable, setIsChildScrollable] = useState(false);
+  const [showHeader, setShowHeader] = useState(true);
 
-const renderUpcoming = ({ item }: any) => (
-  <Card mode="contained">
-    <Card.Title
-      titleVariant="titleMedium"
-      subtitleVariant="bodyMedium"
-      title={`${item.title} • ${item.provider}`}
-      subtitle={`${item.date} ${item.time}`}
-      left={props => <Avatar.Icon {...props} icon="calendar" />}
-    />
-    <Card.Actions>
-      <Button mode="text" onPress={() => { }}>
-        Cancel
-      </Button>
-      <Button mode="contained" onPress={() => { }}>
-        Reschedule
-      </Button>
-    </Card.Actions>
-  </Card>
-);
-
-const renderProduct: ListRenderItem<any> = ({ item, index }) => (
-  <Card mode="contained" style={styles.cardWidth}>
-    <Card.Cover source={{ uri: `${item.image}?${index}` }} />
-    <Card.Content>
-      <Title>{`${item.name} • $${item.price}`}</Title>
-      <Paragraph numberOfLines={1}>{item.description}</Paragraph>
-    </Card.Content>
-    <Card.Actions>
-      <Button onPress={() => { }}>To Wishlist</Button>
-      <Button onPress={() => { }}>Buy</Button>
-    </Card.Actions>
-  </Card>
-);
-
-const renderArticle: ListRenderItem<any> = ({ item, index }) => (
-  <Card mode="contained" style={styles.cardWidth}>
-    <Card.Cover source={{ uri: `${item.image}?${index}` }} />
-    <Card.Content>
-      <Title>{item.title}</Title>
-      <Paragraph numberOfLines={3}>{item.content}</Paragraph>
-    </Card.Content>
-  </Card>
-);
-
-const renderDivider = () => <Divider style={styles.divider} />;
-
-const HomeScreen = ({ navigation }: Props) => {
   const quickActions = [
     {
       "id": "s2u",
@@ -369,19 +302,68 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   ].map(i=> ({...i, onPress: ()=> Alert.alert(i.title)}));
 
+  
+  const handleParentScroll = (event) => {
+    const { contentSize, contentOffset, layoutMeasurement } = event.nativeEvent;
+    const contentHeight = contentSize.height;
+    const scrollOffsetY = contentOffset.y;
+    const layoutHeight = layoutMeasurement.height;
+
+    if (scrollOffsetY <= 0) {
+      setIsChildReachToBottom(false);
+      setShowHeader(true);
+    }
+    if (Math.trunc(scrollOffsetY + layoutHeight) >= Math.trunc(contentHeight)) {
+      setShowHeader(false);
+      setIsChildScrollable(true);
+    }
+  };
+
+  const handleChildScroll = (event) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const scrollOffsetY = contentOffset.y;
+    const contentHeight = contentSize.height;
+    const layoutHeight = layoutMeasurement.height;
+
+    if (scrollOffsetY + layoutHeight >= contentHeight) {
+      setIsChildReachToBottom(true);
+    }
+
+    if (scrollOffsetY <= 0 && isChildReachToBottom) {
+      setIsChildScrollable(false);
+    }
+  };
+
   return (
-    <ScrollView
-      style={styles.container}
-      contentInsetAdjustmentBehavior="automatic">
-      <View style={{
-        flex: 1,
-        backgroundColor: '#fff',
-      }}>
-        <Typo type="p2" weight="500" align="center">
-          Centered semibold text
-        </Typo>
-        <MbbButton label="Press Me" onPress={() => Alert.alert("Pressed!")} />
-        <QuickActions
+	<ThemeProvider>
+    <View style={styles.container}>
+      <Animated.ScrollView
+	    bounces={false}
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+        onScroll={handleParentScroll}
+        scrollEventThrottle={10}
+        ref={scrollRef}
+      >
+		<View style={{marginBottom: 10}}>
+			<CacheeImage
+				source={assets.topSection.background}
+				resizeMode="cover"
+				style={{
+					width: width,
+					height: width * 0.69066667,
+
+					}}
+				/>
+			<View style={{position:'absolute', zIndex:10, width, 
+				// backgroundColor:"green",
+				bottom:0, left: 0, height: (width * 0.69066667) - 100,
+				justifyContent: 'center', alignItems:"center"}}>
+				
+			</View>
+		</View>
+		
+		<QuickActions
           isLoading={false}
           header={{
             cells: [
@@ -395,120 +377,102 @@ const HomeScreen = ({ navigation }: Props) => {
           }}
           quickActions={quickActions}
         />
-      </View>
-      <ThemeProvider theme={{ primary: "#6200ee", text: "#fff" }}>
+        <Animated.View style={styles.parallaxContainer}>
+          <View style={styles.parallaxContent}>
+            <Text style={styles.parallaxText}>Parallax Section</Text>
+          </View>
+        </Animated.View>
 
-      </ThemeProvider>
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={styles.headerTitle}>
-          Upcoming Appointments
-        </Text>
-        <Button
-          compact
-          mode="contained-tonal"
-          onPress={() => navigation.navigate('Upcoming')}
-          style={styles.button}>
-          See All
-        </Button>
-      </View>
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={upcomingBookings.data}
-        renderItem={renderUpcoming}
-        ItemSeparatorComponent={renderDivider}
-        contentContainerStyle={styles.contentContainer}
-      />
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={styles.headerTitle}>
-          New Products
-        </Text>
-        <Button
-          compact
-          mode="contained-tonal"
-          onPress={() => { }}
-          style={styles.button}>
-          See All
-        </Button>
-      </View>
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={newProducts.data}
-        renderItem={renderProduct}
-        ItemSeparatorComponent={renderDivider}
-        contentContainerStyle={styles.contentContainer}
-      />
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={styles.headerTitle}>
-          Recent News
-        </Text>
-        <Button
-          compact
-          mode="contained-tonal"
-          onPress={() => { }}
-          style={styles.button}>
-          See All
-        </Button>
-      </View>
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={recentNews.data}
-        renderItem={renderArticle}
-        ItemSeparatorComponent={renderDivider}
-        contentContainerStyle={styles.contentContainer}
-      />
-      <View style={styles.header}>
-        <Text variant="titleLarge" style={styles.headerTitle}>
-          Recent Articles
-        </Text>
-        <Button
-          compact
-          mode="contained-tonal"
-          onPress={() => { }}
-          style={styles.button}>
-          See All
-        </Button>
-      </View>
-      <FlatList
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        data={recentArticles.data}
-        renderItem={renderArticle}
-        ItemSeparatorComponent={renderDivider}
-        contentContainerStyle={styles.contentContainer}
-      />
-    </ScrollView>
+        <View style={styles.scrollViewContainer}>
+          <ScrollView
+            style={styles.scrollView}
+            onScroll={handleChildScroll}
+            scrollEnabled={isChildScrollable}
+            nestedScrollEnabled
+            contentContainerStyle={{ paddingBottom: 40 }}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={20}
+          >
+            <View style={styles.scrollContent}>
+
+              <Text style={styles.scrollText}>Scrollable Section</Text>
+              <Text style={styles.scrollText}>Scrollable Section</Text>
+              <Text style={styles.scrollText}>Scrollable Section</Text>
+            </View>
+          </ScrollView>
+        </View>
+      </Animated.ScrollView>
+
+	  	<View style={{position:'absolute', zIndex:5, width, maxHeight: 100, overflow: 'hidden'}}>
+			<CacheeImage
+				source={assets.topSection.background}
+				resizeMode="cover"
+				style={{
+					width: width,
+					height: width * 0.69066667,
+					}}
+				/>
+			<View style={{position:'absolute', zIndex:10, width, 
+				top:0, left: 0, height: 100, paddingBottom: 8, paddingHorizontal:24,
+				justifyContent: 'space-between', flexDirection:"row", alignItems:"flex-end"}}>
+				
+			</View>
+		</View>
+    </View>
+	</ThemeProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    paddingHorizontal: 16,
-  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-  divider: {
-    backgroundColor: 'transparent',
-    width: 16,
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    padding: 16,
-    flexDirection: 'row',
+    paddingTop: Platform.OS === 'ios' ? 60 : 20,
+	paddingBottom: Platform.OS === 'ios' ? 60 : 20,
+  },
+  headerText: {
+    fontSize: 24,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  parallaxContainer: {
+    height: 220,
+    backgroundColor: '#87CEEB',
+    borderBottomWidth: 1,
+    borderBottomColor: '#87CEEB',
+  },
+  parallaxContent: {
+    width: '94%',
+    marginLeft: '3%',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  headerTitle: {
+  parallaxText: {
+    fontSize: 24,
+    textAlign: 'center',
+    marginTop: 60,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  scrollViewContainer: {
+    height: 750,
+    backgroundColor: '#F0F8FF',
+  },
+  scrollView: {
     flex: 1,
   },
-  cardWidth: {
-    width: 270,
+  scrollContent: {
+    margin: 30,
+  },
+  scrollText: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginVertical: 20,
+    color: '#333333',
   },
 });
 
-export default HomeScreen;
+
+export default ParallaxExample;
