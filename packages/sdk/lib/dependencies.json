@@ -17,11 +17,11 @@
   },
   "@react-navigation/native": {
     "name": "@react-navigation/native",
-    "version": "7.1.17"
+    "version": "7.0.14"
   },
   "@react-navigation/native-stack": {
     "name": "@react-navigation/native-stack",
-    "version": "7.2.0"
+    "version": "7.0.14"
   },
   "react-native-bottom-tabs": {
     "name": "react-native-bottom-tabs",
