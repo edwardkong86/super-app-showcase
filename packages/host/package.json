@@ -27,7 +27,7 @@
     "cachee": "github:Maybanker/cachee#next3",
     "lodash": "4.17.21",
     "lodash.debounce": "^4.0.8",
-    "mbb-ui-kit": "git+https://github.maybank.com/MSS-ENGINEERING/mbb-ui-kit.git#v0.0.1",
+    "mbb-ui-kit": "file:.yalc/mbb-ui-kit",
     "numeral": "^2.0.6",
     "prop-types": "15.8.1",
     "react": "19.0.0",

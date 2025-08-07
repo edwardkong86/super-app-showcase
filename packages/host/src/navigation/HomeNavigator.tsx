@@ -1,6 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
+import Home2Screen from '../screens/Home2Screen';
 import NavBar from '../components/NavBar';
 import UpcomingScreen from '../screens/UpcomingScreen';
 
@@ -17,6 +18,7 @@ const HomeNavigator = () => {
       screenOptions={{
         header: NavBar,
       }}>
+      <Home.Screen name="Home2" component={Home2Screen} options={{ headerShown: false }} />
       <Home.Screen name="Home" component={HomeScreen} />
       <Home.Screen name="Upcoming" component={UpcomingScreen} />
     </Home.Navigator>
