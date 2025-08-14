@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Alert, ScrollView, Text, View, StyleSheet, Platform, Dimensions } from 'react-native';
-import Animated, { useAnimatedRef } from 'react-native-reanimated';
+import Animated, { useAnimatedRef, useSharedValue } from 'react-native-reanimated';
+import Carousel, {
+  ICarouselInstance,
+  Pagination,
+} from "react-native-reanimated-carousel";
 import { CacheeImage } from "cachee";
-import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "mbb-ui-kit";
+import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "@mss-engineering/mbb-ui-kit";
 
 import assets from "../assets";
 const { width, height } = Dimensions.get('window');
+
 export const ParallaxExample = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const [isChildReachToBottom, setIsChildReachToBottom] = useState(false);
-  const [isChildScrollable, setIsChildScrollable] = useState(false);
-  const [showHeader, setShowHeader] = useState(true);
+  const imageHeight = width * 0.69066667;
+  const ref = React.useRef<ICarouselInstance>(null);
+  const progress = useSharedValue<number>(0);
 
   const quickActions = [
     {
@@ -115,7 +120,6 @@ export const ParallaxExample = () => {
       "fixed": true,
       "title": "Specialty Coffee!",
       "enabled": true,
-      "badge": "NEW",
       "isHighlighted": false,
       "iconFile": "specialtyCoffee.png",
       "requireOnboard": true,
@@ -301,69 +305,51 @@ export const ParallaxExample = () => {
       }
     }
   ].map(i=> ({...i, onPress: ()=> Alert.alert(i.title)}));
-
+  const carouselImages = [
+    assets.topSection.background5,
+    assets.topSection.background1,
+    assets.topSection.background2,
+    assets.topSection.background3,
+    assets.topSection.background4,
+    assets.topSection.background,
+    // Add more images from your assets or use URLs:
+    // assets.topSection.background2,
+    // assets.topSection.background3,
+    // { uri: "https://your-image-url.jpg" },
+  ];
   
-  const handleParentScroll = (event) => {
-    const { contentSize, contentOffset, layoutMeasurement } = event.nativeEvent;
-    const contentHeight = contentSize.height;
-    const scrollOffsetY = contentOffset.y;
-    const layoutHeight = layoutMeasurement.height;
-
-    if (scrollOffsetY <= 0) {
-      setIsChildReachToBottom(false);
-      setShowHeader(true);
-    }
-    if (Math.trunc(scrollOffsetY + layoutHeight) >= Math.trunc(contentHeight)) {
-      setShowHeader(false);
-      setIsChildScrollable(true);
-    }
-  };
-
-  const handleChildScroll = (event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-    const scrollOffsetY = contentOffset.y;
-    const contentHeight = contentSize.height;
-    const layoutHeight = layoutMeasurement.height;
-
-    if (scrollOffsetY + layoutHeight >= contentHeight) {
-      setIsChildReachToBottom(true);
-    }
-
-    if (scrollOffsetY <= 0 && isChildReachToBottom) {
-      setIsChildScrollable(false);
-    }
-  };
-
   return (
 	<ThemeProvider>
     <View style={styles.container}>
       <Animated.ScrollView
-	    bounces={false}
-        nestedScrollEnabled
+	      bounces={false}
+        nestedScrollEnabled={false}
         showsVerticalScrollIndicator={false}
-        onScroll={handleParentScroll}
+        // onScroll={handleParentScroll}
         scrollEventThrottle={10}
         ref={scrollRef}
       >
-		<View style={{marginBottom: 10}}>
-			<CacheeImage
-				source={assets.topSection.background}
-				resizeMode="cover"
-				style={{
-					width: width,
-					height: width * 0.69066667,
-
-					}}
-				/>
-			<View style={{position:'absolute', zIndex:10, width, 
-				// backgroundColor:"green",
-				bottom:0, left: 0, height: (width * 0.69066667) - 100,
-				justifyContent: 'center', alignItems:"center"}}>
-				
-			</View>
-		</View>
+        <Carousel
+            ref={ref}
+            width={width}
+            height={imageHeight}
+            data={carouselImages}
+            onProgressChange={progress}
+            renderItem={({ index }) => (
+              <CacheeImage
+                    key={index}
+                    source={carouselImages[index]}
+                    resizeMode="cover"
+                    style={{
+                      width: width,
+                      height: imageHeight,
+                    }}
+                  />
+            
+            )}
+          />
 		
-		<QuickActions
+		    <QuickActions
           isLoading={false}
           header={{
             cells: [
@@ -377,47 +363,7 @@ export const ParallaxExample = () => {
           }}
           quickActions={quickActions}
         />
-        <Animated.View style={styles.parallaxContainer}>
-          <View style={styles.parallaxContent}>
-            <Text style={styles.parallaxText}>Parallax Section</Text>
-          </View>
-        </Animated.View>
-
-        <View style={styles.scrollViewContainer}>
-          <ScrollView
-            style={styles.scrollView}
-            onScroll={handleChildScroll}
-            scrollEnabled={isChildScrollable}
-            nestedScrollEnabled
-            contentContainerStyle={{ paddingBottom: 40 }}
-            showsVerticalScrollIndicator={false}
-            scrollEventThrottle={20}
-          >
-            <View style={styles.scrollContent}>
-
-              <Text style={styles.scrollText}>Scrollable Section</Text>
-              <Text style={styles.scrollText}>Scrollable Section</Text>
-              <Text style={styles.scrollText}>Scrollable Section</Text>
-            </View>
-          </ScrollView>
-        </View>
       </Animated.ScrollView>
-
-	  	<View style={{position:'absolute', zIndex:5, width, maxHeight: 100, overflow: 'hidden'}}>
-			<CacheeImage
-				source={assets.topSection.background}
-				resizeMode="cover"
-				style={{
-					width: width,
-					height: width * 0.69066667,
-					}}
-				/>
-			<View style={{position:'absolute', zIndex:10, width, 
-				top:0, left: 0, height: 100, paddingBottom: 8, paddingHorizontal:24,
-				justifyContent: 'space-between', flexDirection:"row", alignItems:"flex-end"}}>
-				
-			</View>
-		</View>
     </View>
 	</ThemeProvider>
   );
@@ -471,6 +417,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 20,
     color: '#333333',
+  },
+  // New carousel styles
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+  },
+  paginationDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
   },
 });
 
