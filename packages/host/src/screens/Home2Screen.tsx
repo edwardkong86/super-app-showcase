@@ -9,6 +9,11 @@ import { CacheeImage } from "cachee";
 import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "@mss-engineering/mbb-ui-kit";
 
 import assets from "../assets";
+import LoginButton from '../components/LoginButton';
+
+// Import LoginButton from auth module
+// const LoginButton = React.lazy(() => import('auth/LoginButton'));
+
 const { width, height } = Dimensions.get('window');
 
 export const ParallaxExample = () => {
@@ -363,6 +368,15 @@ export const ParallaxExample = () => {
           }}
           quickActions={quickActions}
         />
+
+        {/* Login Button */}
+        <View style={styles.loginButtonContainer}>
+            <LoginButton 
+              title="Login to Your Account"
+              style={styles.loginButton}
+              textStyle={styles.loginButtonText}
+            />
+        </View>
       </Animated.ScrollView>
     </View>
 	</ThemeProvider>
@@ -433,6 +447,26 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginHorizontal: 4,
+  },
+  loginButtonContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  loginButton: {
+    backgroundColor: '#FFC600',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  loginButtonText: {
+    color: '#000000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

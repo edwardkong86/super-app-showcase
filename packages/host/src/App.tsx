@@ -67,18 +67,18 @@ const App = () => {
         <ErrorBoundary name="AuthProvider">
           <React.Suspense fallback={<SplashScreen />}>
             <AuthProvider>
-              {(authData: { isSignout: boolean; isLoading: boolean }) => {
+              {(authData: { isAuthenticated: boolean; isLoading: boolean }) => {
                 if (authData.isLoading) {
                   return <SplashScreen />;
                 }
 
-                if (authData.isSignout) {
-                  return (
-                    <React.Suspense fallback={<SplashScreen />}>
-                      <SignInScreen />
-                    </React.Suspense>
-                  );
-                }
+                // if (!authData.isAuthenticated) {
+                //   return (
+                //     <React.Suspense fallback={<SplashScreen />}>
+                //       <SignInScreen />
+                //     </React.Suspense>
+                //   );
+                // }
 
                 return (
                   <NavigationContainer

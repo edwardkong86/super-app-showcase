@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface CreateAuthProviderMockProps {
-  isSignout?: boolean;
+  isAuthenticated?: boolean;
   isLoading?: boolean;
 }
 
@@ -12,17 +12,17 @@ type AuthProviderMockProps = {
 };
 
 export const createAuthProviderMock = ({
-  isSignout = false,
+  isAuthenticated = false,
   isLoading = false,
 }: CreateAuthProviderMockProps) => {
   return ({
     children,
   }: {
     children: ({
-      isSignout,
+      isAuthenticated,
       isLoading,
     }: AuthProviderMockProps) => React.ReactNode;
   }) => {
-    return <>{children({isSignout, isLoading})}</>;
+    return <>{children({isAuthenticated, isLoading})}</>;
   };
 };

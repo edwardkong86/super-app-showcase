@@ -12,12 +12,12 @@ const App = () => {
     <ErrorBoundary name="AuthProvider">
       <React.Suspense fallback={<SplashScreen />}>
         <AuthProvider>
-          {(authData: {isSignout: boolean; isLoading: boolean}) => {
+          {(authData: {isAuthenticated: boolean; isLoading: boolean}) => {
             if (authData.isLoading) {
               return <SplashScreen />;
             }
 
-            if (authData.isSignout) {
+            if (!authData.isAuthenticated) {
               return (
                 <React.Suspense fallback={<SplashScreen />}>
                   <SignInScreen />

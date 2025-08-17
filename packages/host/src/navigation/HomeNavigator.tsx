@@ -8,6 +8,7 @@ import UpcomingScreen from '../screens/UpcomingScreen';
 export type HomeStackParamList = {
   Home: undefined;
   Upcoming: undefined;
+  Home2: undefined;
 };
 
 const Home = createNativeStackNavigator<HomeStackParamList>();
