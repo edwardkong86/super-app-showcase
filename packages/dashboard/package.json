@@ -32,7 +32,7 @@
     "react-native-paper": "5.12.5",
     "react-native-safe-area-context": "5.3.0",
     "react-native-screens": "4.10.0",
-    "react-native-vector-icons": "10.2.0"
+    "react-native-vector-icons": "10.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "^8.12.2",
     "eslint": "^8.57.0",
     "jest": "^29.6.3",
-    "nextgen-shared-sdk": "^0.0.7",
+    "nextgen-shared-sdk": "^0.0.8",
     "prettier": "^2.8.8",
     "react-test-renderer": "19.0.0",
     "typescript": "^5.6.3"
@@ -66,7 +66,7 @@
         "./node_modules/nextgen-shared-sdk/preset"
       ],
       "requirements": [
-        "nextgen-shared-sdk@0.0.1"
+        "nextgen-shared-sdk@0.0.8"
       ],
       "capabilities": [
         "super-app"

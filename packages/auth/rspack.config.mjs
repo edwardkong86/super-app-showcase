@@ -49,6 +49,7 @@ export default env => {
           './AuthService': './src/services/AuthService',
           './APIService': './src/services/APIService',
           './LoginButton': './src/components/LoginButton',
+          './AuthContext': './src/contexts/AuthContext',
         },
         shared: getSharedDependencies({eager: false}),
       }),

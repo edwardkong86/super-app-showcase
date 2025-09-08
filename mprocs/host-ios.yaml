@@ -5,6 +5,9 @@ procs:
   Auth:
     shell: pnpm --filter auth start --platform ios
     stop: SIGKILL
+  Account:
+    shell: pnpm --filter account start --platform ios
+    stop: SIGKILL
   Booking:
     shell: pnpm --filter booking start --platform ios
     stop: SIGKILL

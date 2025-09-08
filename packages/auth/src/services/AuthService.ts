@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BehaviorSubject } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import APIService from './APIService';
 
 export interface AuthTokens {
   accessToken: string;
@@ -32,6 +33,56 @@ export interface LoginCredentials {
 export interface SignUpData extends LoginCredentials {
   name: string;
   confirmPassword: string;
+}
+
+export interface GeoLocationInfo {
+  Latitude: string;
+  Longitude: string;
+  Status: string;
+  Timestamp: string;
+  HorizontalAccuracy: string;
+}
+
+export interface MobileSDKData {
+  deviceDetail: string;
+  deviceId: string;
+  deviceModel: string;
+  deviceName: string;
+  devicePrint: string;
+  osType: string;
+  osVersion: string;
+  rsaKey: string;
+  hardwareID: string;
+  screenSize: string;
+  languages: string;
+  multitaskingSupported: boolean;
+  timestamp: string;
+  geoLocationInfo: GeoLocationInfo;
+  emulator: number;
+  osId: string;
+  compromised: number;
+  sdkVersion: string;
+  appState: string;
+  keyChainErrorOnStoring: string;
+  keyChainErrorOnRetrieve: string;
+}
+
+export interface EnrollmentRequest {
+  grantType: string;
+  tokenType: string;
+  customerKey?: string;
+  mobileSDKData: MobileSDKData;
+  limitApproved: boolean;
+  marketing: boolean;
+  showBalanceDashboard: boolean;
+  userDashboard: string | null;
+  fromModule: string;
+  bioEventCode?: string;
+  rsaType?: string;
+  challenge?: any;
+  username?: string;
+  passwd?: string;
+  notificationRequired?: boolean;
 }
 
 class AuthService {
@@ -116,28 +167,37 @@ class AuthService {
     });
   }
 
-  async login(credentials: LoginCredentials): Promise<void> {
+  async login(enrollmentData: EnrollmentRequest): Promise<void> {
     try {
-      // In a real implementation, this would call your auth API
-      const response = await fetch('https://your-auth-api.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
+      const apiService = APIService.getInstance();
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
+      // Create a Maya client with the specific base URL
+      apiService.createModuleClient(
+        'maya',
+        'https://uat-maya.maybank.com.my'
+      );
 
-      const data = await response.json();
+      // Headers are handled automatically by APIService based on moduleId
+      const response = await apiService.makeAuthorizedCall(
+        'maya',
+        'post',
+        '/v2/enrollment?module=home',
+        enrollmentData,
+        {} // No need to pass headers - they're added automatically by APIService
+      );
+
+
       const tokens: AuthTokens = {
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        expiresAt: data.expiresAt,
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+        expiresAt: response.expiresAt,
       };
+
+      console.log('tokens', tokens);
 
       await this.setTokens(tokens);
     } catch (error) {
+      console.log("errorerror", error)
       throw new Error(`Login failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

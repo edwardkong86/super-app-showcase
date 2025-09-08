@@ -11,9 +11,6 @@ import { ThemeProvider, Button as MbbButton, Typo, QuickActions } from "@mss-eng
 import assets from "../assets";
 import LoginButton from '../components/LoginButton';
 
-// Import LoginButton from auth module
-// const LoginButton = React.lazy(() => import('auth/LoginButton'));
-
 const { width, height } = Dimensions.get('window');
 
 export const ParallaxExample = () => {

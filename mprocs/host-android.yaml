@@ -5,6 +5,9 @@ procs:
   Auth:
     shell: pnpm --filter auth start --platform android
     stop: SIGKILL
+  Account:
+    shell: pnpm --filter account start --platform android
+    stop: SIGKILL
   Booking:
     shell: pnpm --filter booking start --platform android
     stop: SIGKILL

@@ -1,12 +1,13 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import {fileURLToPath} from 'node:url';
 import * as Repack from '@callstack/repack';
 import rspack from '@rspack/core';
-import { getSharedDependencies } from 'nextgen-shared-sdk';
-import { ReanimatedPlugin } from '@callstack/repack-plugin-reanimated'
+import {getSharedDependencies} from 'nextgen-shared-sdk';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const STANDALONE = Boolean(process.env.STANDALONE);
 
 /**
  * Rspack configuration enhanced with Re.Pack defaults for React Native.
@@ -16,7 +17,7 @@ const __dirname = path.dirname(__filename);
  */
 
 export default env => {
-  const { mode, platform = process.env.PLATFORM } = env;
+  const {mode, platform} = env;
 
   return {
     mode,
@@ -29,43 +30,31 @@ export default env => {
       ...Repack.getResolveOptions(),
     },
     output: {
-      uniqueName: 'sas-host',
+      uniqueName: 'sas-account',
     },
     module: {
       rules: [
         ...Repack.getJsTransformRules(),
-        ...Repack.getAssetTransformRules(),
-        {
-          test: /\.ts$/,
-          use: {
-            loader: '@callstack/repack-plugin-reanimated/loader',
-            options: {
-              babelPlugins: [
-                [
-                  '@babel/plugin-syntax-typescript',
-                  { isTSX: false, allowNamespaces: true },
-                ],
-              ],
-            },
-          },
-        },
+        ...Repack.getAssetTransformRules({inline: !STANDALONE}),
       ],
     },
     plugins: [
       new Repack.RepackPlugin(),
-      new ReanimatedPlugin(),
       new Repack.plugins.ModuleFederationPluginV2({
-        name: 'host',
+        name: 'account',
+        filename: 'account.container.js.bundle',
         dts: false,
+        exposes: STANDALONE
+          ? undefined
+          : {'./App': './src/navigation/MainNavigator'},
         remotes: {
-          booking: `booking@http://localhost:9000/${platform}/mf-manifest.json`,
-          shopping: `shopping@http://localhost:9001/${platform}/mf-manifest.json`,
-          dashboard: `dashboard@http://localhost:9002/${platform}/mf-manifest.json`,
           auth: `auth@http://localhost:9003/${platform}/mf-manifest.json`,
-          news: `news@http://localhost:9004/${platform}/mf-manifest.json`,
-          account: `account@http://localhost:9005/${platform}/mf-manifest.json`,
         },
-        shared: getSharedDependencies({ eager: true }),
+        shared: getSharedDependencies({eager: STANDALONE}),
+      }),
+      new Repack.plugins.CodeSigningPlugin({
+        enabled: mode === 'production',
+        privateKeyPath: path.join('..', '..', 'code-signing.pem'),
       }),
       // silence missing @react-native-masked-view optionally required by @react-navigation/elements
       new rspack.IgnorePlugin({

@@ -1,11 +1,14 @@
 import React from 'react';
 import type {
   User,
-  LoginCredentials,
   SignUpData,
   AuthTokens,
   ModulePermission,
+  EnrollmentRequest,
 } from '../services/AuthService';
+
+type AuthStep = 'PREONBOARD' | 'PRELOGIN' | 'TOUCHID' | 'LOGIN';
+type AuthScope = 0 | 1 | 2 | 3;
 
 interface AuthContextType {
   // State
@@ -14,11 +17,17 @@ interface AuthContextType {
   user: User | null;
   error: string | null;
   showSignInScreen: boolean;
+  currentScope: AuthScope;
 
   // Basic auth methods
-  signIn: (credentials: LoginCredentials) => Promise<void>;
+  signIn: (enrollmentData: EnrollmentRequest) => Promise<void>;
   signOut: () => Promise<void>;
   signUp: (signUpData: SignUpData) => Promise<void>;
+
+  // Scope methods
+  handleStepL2: (enrollmentData: EnrollmentRequest) => Promise<void>;
+  handleStepL3: (enrollmentData: EnrollmentRequest) => Promise<void>;
+  setCurrentScope: (scope: AuthScope) => void;
 
   // Enhanced auth methods
   refreshToken: () => Promise<AuthTokens>;
@@ -48,6 +57,7 @@ const defaultAuthContext: AuthContextType = {
   user: null,
   error: null,
   showSignInScreen: false,
+  currentScope: 0 as AuthScope,
 
   // Basic auth methods
   signIn: async () => {
@@ -57,6 +67,17 @@ const defaultAuthContext: AuthContextType = {
     throw new Error('AuthProvider not found');
   },
   signUp: async () => {
+    throw new Error('AuthProvider not found');
+  },
+
+  // Scope methods
+  handleStepL2: async () => {
+    throw new Error('AuthProvider not found');
+  },
+  handleStepL3: async () => {
+    throw new Error('AuthProvider not found');
+  },
+  setCurrentScope: () => {
     throw new Error('AuthProvider not found');
   },
 

@@ -91,15 +91,21 @@ class APIService {
     // Request interceptor
     client.interceptors.request.use(
       async (config) => {
-        const token = await this.authService.getCredentials();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-
+        const token = await this.authService.getCurrentTokens();
+        console.log("accessToken", token)
+        
         // Add module ID to headers for tracking
         if (moduleId) {
           config.headers['X-Module-ID'] = moduleId;
         }
+
+        // Add module-specific headers
+        if (moduleId) {
+          this.addModuleSpecificHeaders(config.headers, moduleId, token?.accessToken);
+        } else if (token) {
+          config.headers.authorization = `bearer ${token.accessToken}`;
+        }
+        console.log("setupInterceptors-request", config.headers, token)
 
         // Add request timestamp
         config.headers['X-Request-Time'] = new Date().toISOString();
@@ -266,6 +272,28 @@ class APIService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  private addModuleSpecificHeaders(headers: any, moduleId: string, token?: string): void {
+    switch (moduleId) {
+      case 'maya-banking':
+      case 'maya':
+        if(token) {
+          headers['authorization'] = `bearer ${token}`;
+          headers['maya-authorization'] = `bearer ${token}`;
+        }
+        headers['Accept'] = 'application/json';
+        headers['X-APP-PLATFORM'] = 'IOS';
+        headers['X-APP-VERSION'] = '0.9.40';
+        headers['X-APP-ENVIRONMENT'] = '';
+        headers['X-APP-BUILD-NO'] = '1450';
+        headers['X-APP-RELEASE-NO'] = '25.7.0';
+        headers['X-APP-SESSION-TRACE-ID'] = 'MWRQTEJlbFNhdUZ2R2t1VmZqQ2NGblZqMm5rVVVSbWE=';
+        break;
+      default:
+        headers.authorization = `bearer ${token}`;
+        break;
+    }
+  }
+
   getClient(moduleId: string = 'default'): AxiosInstance {
     const client = this.clients.get(moduleId);
     if (!client) {
@@ -291,6 +319,8 @@ class APIService {
       },
     };
 
+    console.log("makeAuthorizedCall", url, requestConfig)
+
     switch (method.toLowerCase()) {
       case 'get':
         return client.get(url, requestConfig);
@@ -309,6 +339,8 @@ class APIService {
 
   // Convenience methods
   async get<T>(url: string, config?: AxiosRequestConfig, moduleId: string = 'default'): Promise<T> {
+    console.log("get", config, "1111111111", moduleId)
+
     return this.makeAuthorizedCall<T>(moduleId, 'get', url, undefined, config);
   }
 

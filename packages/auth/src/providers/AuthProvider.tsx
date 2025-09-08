@@ -2,7 +2,7 @@ import React from 'react';
 import { Subscription } from 'rxjs';
 import AuthService, {
   type User,
-  type LoginCredentials,
+  type EnrollmentRequest,
   type SignUpData,
   type AuthTokens,
 } from '../services/AuthService';
@@ -18,11 +18,23 @@ enum ActionTypes {
   CLEAR_ERROR = 'CLEAR_ERROR',
   SHOW_SIGN_IN = 'SHOW_SIGN_IN',
   HIDE_SIGN_IN = 'HIDE_SIGN_IN',
+  SET_CURRENT_SCOPE = 'SET_CURRENT_SCOPE',
 }
+
+type AuthStep = 'PREONBOARD' | 'PRELOGIN' | 'TOUCHID' | 'LOGIN';
+type AuthScope = 0 | 1 | 2 | 3;
 
 type Action = {
   type: ActionTypes;
   payload?: any;
+};
+
+// Scope mapping: 0 = PREONBOARD, 1 = PRELOGIN, 2 = TOUCHID, 3 = LOGIN
+const SCOPE = {
+  PREONBOARD: 0 as const,
+  PRELOGIN: 1 as const, 
+  TOUCHID: 2 as const,
+  LOGIN: 3 as const,
 };
 
 type State = {
@@ -31,6 +43,7 @@ type State = {
   user: User | null;
   error: string | null;
   showSignInScreen: boolean;
+  currentScope: AuthScope;
 };
 
 const initialState: State = {
@@ -39,6 +52,7 @@ const initialState: State = {
   user: null,
   error: null,
   showSignInScreen: false,
+  currentScope: SCOPE.PREONBOARD,
 };
 
 const reducer = (prevState: State, action: Action): State => {
@@ -81,6 +95,11 @@ const reducer = (prevState: State, action: Action): State => {
         ...prevState,
         showSignInScreen: false,
       };
+    case ActionTypes.SET_CURRENT_SCOPE:
+      return {
+        ...prevState,
+        currentScope: action.payload,
+      };
     default:
       return prevState;
   }
@@ -99,6 +118,61 @@ const AuthProvider = ({
     dispatch({ type: ActionTypes.CLEAR_ERROR });
   }, []);
 
+  const handleStepL2 = React.useCallback(async (enrollmentData: EnrollmentRequest) => {
+    try {
+      dispatch({ type: ActionTypes.SET_LOADING, payload: true });
+      
+      // Modify enrollment data for TOUCHID step
+      const touchIdData: EnrollmentRequest = {
+        ...enrollmentData,
+        tokenType: "TOUCHID",
+        bioEventCode: "FR",
+        rsaType: "BIO_LOGIN",
+        challenge: {}
+      };
+
+      await authService.login(touchIdData);
+      console.log('TOUCHID successful');
+      
+      // Auto-advance to next scope after successful TouchID
+      dispatch({ type: ActionTypes.SET_CURRENT_SCOPE, payload: SCOPE.TOUCHID });
+    } catch (error) {
+      console.error('TOUCHID failed:', error);
+      throw error;
+    } finally {
+      dispatch({ type: ActionTypes.SET_LOADING, payload: false });
+    }
+  }, [authService]);
+
+  const handleStepL3 = React.useCallback(async (enrollmentData: EnrollmentRequest) => {
+    try {
+      dispatch({ type: ActionTypes.SET_LOADING, payload: true });
+      
+      
+      // Modify enrollment data for LOGIN step
+      const loginData: EnrollmentRequest = {
+        ...enrollmentData,
+        tokenType: "LOGIN",
+        username: "ARRT38",
+        passwd: "KzPB4EbZkXWK/Bw6v4AZABJXmFixZiTIPjhaci8sbabI0tn4htcEmfZRT1cP1HDCWePLg0OqYDnECtAQUMh/NEDwFJEPyuODyv+p/xPYjDfCEs/7+o9VlomIrIeNgA5z1hl1nDc8W7X6inUtxr+qJH/cRXrwIwSZY7a+vGRfHng=",
+        notificationRequired: true
+      };
+
+      await authService.login(loginData);
+      console.log('LOGIN successful');
+      dispatch({ type: ActionTypes.SET_CURRENT_SCOPE, payload: SCOPE.LOGIN });
+      // Hide sign-in screen after successful login
+      setTimeout(() => {
+        dispatch({ type: ActionTypes.HIDE_SIGN_IN });
+      }, 1500);
+    } catch (error) {
+      console.error('LOGIN failed:', error);
+      throw error;
+    } finally {
+      dispatch({ type: ActionTypes.SET_LOADING, payload: false });
+    }
+  }, [authService]);
+
   const authContext = React.useMemo(
     () => ({
       // State
@@ -107,22 +181,35 @@ const AuthProvider = ({
       user: state.user,
       error: state.error,
       showSignInScreen: state.showSignInScreen,
+      currentScope: state.currentScope,
 
       // Basic auth methods
-      signIn: async (credentials: LoginCredentials) => {
+      signIn: async (enrollmentData: EnrollmentRequest) => {
         try {
           dispatch({ type: ActionTypes.SET_LOADING, payload: true });
           dispatch({ type: ActionTypes.CLEAR_ERROR });
+          
+          await authService.login(enrollmentData);
+          console.log('PRELOGIN successful');
 
-          await authService.login(credentials);
-          // Hide sign in screen on successful login
-          dispatch({ type: ActionTypes.HIDE_SIGN_IN });
-          // Auth state will be updated via observables
+          dispatch({ type: ActionTypes.SET_CURRENT_SCOPE, payload: SCOPE.PRELOGIN });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Login failed';
           dispatch({ type: ActionTypes.SET_ERROR, payload: errorMessage });
           throw error;
+        } finally {
+          dispatch({ type: ActionTypes.SET_LOADING, payload: false });
         }
+      },
+
+      getCurrentScope: () => state.currentScope,
+
+      // Step methods
+      handleStepL2,
+      handleStepL3,
+
+      setCurrentScope: (scope: AuthScope) => {
+        dispatch({ type: ActionTypes.SET_CURRENT_SCOPE, payload: scope });
       },
 
       signOut: async () => {
@@ -228,8 +315,11 @@ const AuthProvider = ({
       state.user,
       state.error,
       state.showSignInScreen,
+      state.currentScope,
       authService,
       clearError,
+      handleStepL2,
+      handleStepL3,
     ],
   );
 

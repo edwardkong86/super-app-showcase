@@ -1,31 +1,28 @@
 import React from 'react';
 import {createNativeBottomTabNavigator} from '@bottom-tabs/react-navigation';
-import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import { useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeNavigator from './HomeNavigator';
 import ServicesNavigator from './ServicesNavigator';
 import AccountNavigator from './AccountNavigator';
-import { Alert,
-  Animated,
+import { 
   StyleSheet,
-  TouchableOpacity,Text, 
-  View } from 'react-native';
-import { Typo } from '@mss-engineering/mbb-ui-kit';
+  TouchableOpacity
+} from 'react-native';
 
 export type TabsParamList = {
   HomeNavigator: undefined;
-  ServicesNavigator: undefined;
-  ScanAndPayNavigator: undefined;
   AccountNavigator: undefined;
-  ApplyNavigator: undefined;
+  ScanAndPayNavigator: undefined;
+  InteractNavigator: undefined;
+  MenuNavigator: undefined;
 };
 
-const homeIcon = Icon.getImageSourceSync('home', 24);
-const compassIcon = Icon.getImageSourceSync('safe-square-outline', 24);
-const scanIcon = Icon.getImageSourceSync('qrcode-scan', 24);
-const accountIcon = Icon.getImageSourceSync('chart-areaspline', 24);
-const documentIcon = Icon.getImageSourceSync('application-edit-outline', 24);
+// const homeIcon = Icon.getImageSourceSync('home', 24);
+// const accountsIcon = Icon.getImageSourceSync('safe-square-outline', 24);
+// const scanIcon = Icon.getImageSourceSync('qrcode-scan', 24);
+// const interactIcon = Icon.getImageSourceSync('account-group', 24);
+// const menuIcon = Icon.getImageSourceSync('menu', 24);
 
 const Tabs = createNativeBottomTabNavigator<TabsParamList>();
 
@@ -92,113 +89,74 @@ const TabsNavigator = () => {
     },
   });
 
-  const _renderIcon = (routeName, selectedTab) => {
-    let icon = '';
 
-    switch (routeName) {
-      case 'Home':
-        icon = 'home';
-        break;
-      case 'Accounts':
-        icon = 'safe-square-outline';
-        break;
-      case 'Expenses':
-          icon = 'chart-areaspline';
-          break;
-      case 'Apply':
-          icon = 'application-edit-outline';
-          break;
-    }
-
-    return (
-      <Icon
-        name={icon}
-        size={25}
-        color={routeName === selectedTab ? colors.primary : 'gray'}
-      />
-    );
-  };
-
-  const renderTabBar = ({ routeName, selectedTab, navigate }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => navigate(routeName)}
-        style={styles.tabbarItem}
-      >
-        {_renderIcon(routeName, selectedTab)}
-        <Typo size={10} style={{lineHeight:14}} color={routeName === selectedTab ? colors.primary : 'gray'} weight="600">{routeName}</Typo>
-      </TouchableOpacity>
-    );
-  };
-
-  return (
-    <CurvedBottomBar.Navigator
-        type="DOWN"
-        style={styles.bottomBar}
-        shadowStyle={styles.shawdow}
-        height={65}
-        circleWidth={50}
-        bgColor="#252629"
-        initialRouteName="Home"
-        borderTopLeftRight
-        renderCircle={({ selectedTab, navigate }) => (
-          // <Animated.View style={styles.btnCircleUp}>
-            <TouchableOpacity
-              style={styles.btnCircleUp}
-              onPress={() => Alert.alert('Click Action')}
-            >
-              <Icon name={'qrcode-scan'} color="gray" size={25} />
-              <Typo size={10} style={{lineHeight:14}} color="gray" weight="600">Scan</Typo>
-            </TouchableOpacity>
-          // </Animated.View>
-        )}
-        tabBar={renderTabBar}
-        screenOptions={{headerShown: false}}
+  // return (
+  //   <CurvedBottomBar.Navigator
+  //       type="DOWN"
+  //       style={styles.bottomBar}
+  //       shadowStyle={styles.shawdow}
+  //       height={65}
+  //       circleWidth={50}
+  //       bgColor="#252629"
+  //       initialRouteName="Home"
+  //       borderTopLeftRight
+  //       renderCircle={({ selectedTab, navigate }) => (
+  //         // <Animated.View style={styles.btnCircleUp}>
+  //           <TouchableOpacity
+  //             style={styles.btnCircleUp}
+  //             onPress={() => Alert.alert('Click Action')}
+  //           >
+  //             <Icon name={'qrcode-scan'} color="gray" size={25} />
+  //             <Typo size={10} style={{lineHeight:14}} color="gray" weight="600">Scan</Typo>
+  //           </TouchableOpacity>
+  //         // </Animated.View>
+  //       )}
+  //       tabBar={renderTabBar}
+  //       screenOptions={{headerShown: false}}
         
-      >
-        <CurvedBottomBar.Screen
-          name="Home"
-          position="LEFT"
-          component={HomeNavigator}
-        />
-        <CurvedBottomBar.Screen
-          name="Accounts"
-          position="LEFT"
-          component={ServicesNavigator}
-        />
-        <CurvedBottomBar.Screen
-          name="Expenses"
-          component={ServicesNavigator}
-          position="RIGHT"
-        />
-        <CurvedBottomBar.Screen
-          name="Apply"
-          component={ServicesNavigator}
-          position="RIGHT"
-        />
-      </CurvedBottomBar.Navigator>
-  )
+  //     >
+  //       <CurvedBottomBar.Screen
+  //         name="Home"
+  //         position="LEFT"
+  //         component={HomeNavigator}
+  //       />
+  //       <CurvedBottomBar.Screen
+  //         name="Accounts"
+  //         position="LEFT"
+  //         component={AccountNavigator}
+  //       />
+  //       <CurvedBottomBar.Screen
+  //         name="Expenses"
+  //         component={ServicesNavigator}
+  //         position="RIGHT"
+  //       />
+  //       <CurvedBottomBar.Screen
+  //         name="Apply"
+  //         component={ServicesNavigator}
+  //         position="RIGHT"
+  //       />
+  //     </CurvedBottomBar.Navigator>
+  // )
 
   return (
     <Tabs.Navigator
       translucent={false}
-      tabBarActiveTintColor={colors.primary50}
-      barTintColor={colors.primary95}
+      tabBarActiveTintColor="#FFC600"
       >
       <Tabs.Screen
         name="HomeNavigator"
         component={HomeNavigator}
         options={{
           title: 'Home',
-          tabBarIcon: () => homeIcon,
+          tabBarIcon: () => Icon.getImageSourceSync('home', 24),
         }}
       />
       <Tabs.Screen
-        name="ServicesNavigator"
-        component={ServicesNavigator}
+        name="AccountNavigator"
+        component={AccountNavigator}
         options={{
-          title: 'Services',
-          tabBarIcon: () => compassIcon,
+          title: 'Accounts',
+          tabBarIcon: () => Icon.getImageSourceSync('account-multiple', 24),
         }}
       />
       <Tabs.Screen
@@ -206,33 +164,23 @@ const TabsNavigator = () => {
         component={ServicesNavigator}
         options={{
           title: 'Scan',
-          tabBarIcon: () => scanIcon,
-          tabBarButton: ({children, onPress}: {children: any, onPress: any}) => (
-            <TouchableOpacity style={{ 
-              borderRadius: 24,
-              paddingHorizontal: 24,
-              paddingVertical: 10, 
-              backgroundColor: "#FFC600"
-            }} onPress={onPress}>
-              {children}
-            </TouchableOpacity>
-          )
-        } as any}
-      />
-      <Tabs.Screen
-        name="AccountNavigator"
-        component={AccountNavigator}
-        options={{
-          title: 'Account',
-          tabBarIcon: () => accountIcon,
+          tabBarIcon: () => Icon.getImageSourceSync('qrcode-scan', 24),
         }}
       />
       <Tabs.Screen
-        name="ApplyNavigator"
+        name="InteractNavigator"
+        component={ServicesNavigator}
+        options={{
+          title: 'Interact',
+          tabBarIcon: () => Icon.getImageSourceSync('account-group', 24),
+        }}
+      />
+      <Tabs.Screen
+        name="MenuNavigator"
         component={AccountNavigator}
         options={{
-          title: 'Apply',
-          tabBarIcon: () => documentIcon,
+          title: 'Menu',
+          tabBarIcon: () => Icon.getImageSourceSync('menu', 24),
         }}
       />
     </Tabs.Navigator>

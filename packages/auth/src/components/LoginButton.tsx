@@ -13,11 +13,11 @@ const LoginButton: React.FC<LoginButtonProps> = ({
   style,
   textStyle 
 }) => {
-  const { showSignIn, isAuthenticated } = useAuth();
+  const { showSignIn, isAuthenticated, currentScope } = useAuth();
 
-  if (isAuthenticated) {
-    return null; // Don't show login button if already authenticated
-  }
+  // if (isAuthenticated) {
+  //   return null; // Don't show login button if already authenticated
+  // }
 
   return (
     <Pressable 

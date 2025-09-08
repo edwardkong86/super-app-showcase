@@ -11,11 +11,11 @@ const Home = createNativeStackNavigator<AccountStackParamList>();
 
 const AccountNavigator = () => {
   return (
-    <Home.Navigator
+    <Home.Navigator 
       screenOptions={{
         header: NavBar,
       }}>
-      <Home.Screen name="Account" component={AccountScreen} />
+      <Home.Screen name="Account" component={AccountScreen}  options={{ headerShown: false }}  />
     </Home.Navigator>
   );
 };

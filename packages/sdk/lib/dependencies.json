@@ -41,7 +41,7 @@
   },
   "react-native-vector-icons": {
     "name": "react-native-vector-icons",
-    "version": "10.2.0"
+    "version": "10.3.0"
   },
   "@module-federation/enhanced": {
     "name": "@module-federation/enhanced",
@@ -63,5 +63,9 @@
   "lodash": {
     "name": "lodash",
     "version": "4.17.21"
+  }, 
+  "react-native-linear-gradient":{
+    "name": "react-native-linear-gradient",
+    "version": "2.8.3"
   }
 }
